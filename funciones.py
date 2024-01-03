@@ -4,23 +4,22 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import ast
 
-def transformar_expresion(expresion):
-    expresion = expresion.replace(" ", "")
-    
-    formula = expresion.replace("^", "**")  
-    formula = formula + " "
-    for n, it in enumerate(formula):
-        if it == "x" and formula[n - 1] in [str(s) for s in range(0,10)]:
-            formula = formula[:n] + "X" + formula[n + 1:]   
-    
-    formula_x = formula.replace("X", "*x") 
-    
-    return formula_x
-
-
 class Funcion_Matematica:
     def __init__(self, _formula_=None):
         self._formula_ = _formula_
+
+    def transformar_expresion(expresion):
+        expresion = expresion.replace(" ", "")
+
+        formula = expresion.replace("^", "**")  
+        formula = formula + " "
+        for n, it in enumerate(formula):
+            if it == "x" and formula[n - 1] in [str(s) for s in range(0,10)]:
+                formula = formula[:n] + "X" + formula[n + 1:]   
+
+        formula_x = formula.replace("X", "*x") 
+
+        return formula_x
 
     def lineal(self, expresion, inplace=True):
         if not isinstance(expresion, str):
@@ -29,7 +28,7 @@ class Funcion_Matematica:
         if "x" not in expresion:
             raise ArithmeticError("La expresión debe contener la variable dependiente expresada\ncon la letra 'x'")
         
-        form_x = transformar_expresion(expresion)
+        form_x = self.transformar_expresion(expresion)
 
         if not inplace:
             return form_x
@@ -55,10 +54,18 @@ class Funcion_Matematica:
 
         plt.title(f"f(x) = {self._formula_}")
 
-        # plt.xticks(np.arange(-1000, 1000, 1))
-        # plt.yticks(np.arange(-1000, 1000, 1))
-
         plt.xlim(-10, 10)
         plt.ylim(-10, 10)
 
         plt.show()
+
+    def coeficientes(self):
+        cant_coeficientes = len([z for z in self._formula_ if z == 'x'])
+
+        dicc_coeficientes = {
+            0: 'coef_independiente',
+            1: 'coef_lineal',
+            2: 'coef_cuadratico'
+        }
+
+                 
